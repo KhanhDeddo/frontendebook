@@ -1,0 +1,14 @@
+@use "sass:map";
+@import "../../../Style/theme";
+
+.slider{
+    padding-bottom: 10px;
+    .title-book {
+        margin: 20px 0 10px 10px;
+        span {
+          font-size: 25px;
+          font-weight: bold;
+          color: map.get($theme-color, "main");
+        }
+      }    
+}

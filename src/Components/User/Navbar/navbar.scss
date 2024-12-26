@@ -1,0 +1,16 @@
+@use "sass:map";
+@import "../../../Style/theme";
+.navbar ul{
+    display: flex;
+    margin-top: 5px;
+    li{
+        list-style: none;
+        font-size: 16px;
+        font-weight: bold;
+        color:map.get($theme-color,"normal-text");
+        a{
+            text-decoration: none;
+            color:map.get($theme-color,"normal-text");
+        }
+    }
+}

@@ -1,0 +1,11 @@
+@use "sass:map";
+@import "../../../Style/theme";
+.title{
+  font-weight: bold;
+  color: map.get($theme-color,"normal-text");
+  .card-price{
+    margin-top: 20px;
+    color:#f00505;
+    margin-bottom: 10px;
+  }
+}

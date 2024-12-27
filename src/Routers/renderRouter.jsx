@@ -4,6 +4,9 @@ import { ROUTER } from "./router";
 import MasterLayout from "../Pages/User/Home/MasterLayout/masterLayout";
 import LoginPage from "../Auth/Login/login";
 import { Profile } from "../Pages/User/Profile/profile";
+import RegisterPage from "../Auth/Register/register";
+import { Shop } from "../Pages/User/Shop/shop";
+import BookDetails from "../Pages/User/Product/product";
 
 
 const RenderRouter = () => {
@@ -11,12 +14,12 @@ const RenderRouter = () => {
     const userRoutes = [
         { path: ROUTER.USER.HOME, Component: <Home/> },
         { path: ROUTER.USER.LOGIN, Component: <LoginPage /> },
-        // { path: ROUTER.USER.REGISTER, Component: <RegisterPage /> },
+        { path: ROUTER.USER.REGISTER, Component: <RegisterPage /> },
         { path: ROUTER.USER.PROFILE, Component: <Profile /> },
+        { path: ROUTER.USER.PRODUCTS, Component: <Shop /> },
         // { path: ROUTER.USER.SHOPCART, Component: <CartPage /> },
-        // { path: ROUTER.USER.PRODUCTS, Component: <Products /> },
         // { path: ROUTER.USER.ORDERS, Component: <Orders /> },
-        // { path: ROUTER.USER.PRODUCTDETAIL, Component: <BookDetails /> },
+        { path: ROUTER.USER.PRODUCTDETAIL, Component: <BookDetails /> },
         // { path: ROUTER.USER.PAYMENT, Component: <PaymentPage /> },
     ];
 
@@ -41,8 +44,8 @@ const RenderRouter = () => {
                     path={route.path}
                     element={
                         // Login và Register không cần MasterLayout
-                        route.Component.type === LoginPage 
-                        // route.Component.type === RegisterPage
+                        route.Component.type === LoginPage ||
+                        route.Component.type === RegisterPage
                             ? route.Component:
                             <MasterLayout>{route.Component}</MasterLayout>
                     }

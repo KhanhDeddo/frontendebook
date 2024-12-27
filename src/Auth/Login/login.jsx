@@ -12,8 +12,6 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({ user_email: "", user_password: "" }); // Dữ liệu form
   const navigate = useNavigate();
 
-
-  
   // Lấy danh sách người dùng từ API
   useEffect(() => {
     const loadUsers = async () => {
@@ -47,14 +45,13 @@ const LoginPage = () => {
     if (user) {
       // Đăng nhập thành công
       localStorage.setItem("user", JSON.stringify(user)); // Lưu thông tin user vào localStorage
-      // handleLogin(user.user_id)
       user.user_is_admin ? navigate(ROUTER.ADMIN.HOME) : navigate(ROUTER.USER.HOME);
     } else {
       // Đăng nhập thất bại
       setFormError("Tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại.");
     }
   };
-
+  
   return (
     <div className="bodylogin">
       <div className="login-container">

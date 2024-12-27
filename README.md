@@ -1,3 +1,4 @@
+npm install react-scripts
 npm install react-router-dom
 npm install sass
 npm install antd

@@ -1,0 +1,147 @@
+@use "sass:map";
+@import "../../Style/theme";
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  
+  .register-container {
+    display: flex;
+    width: 850px; /* Tăng chiều rộng */
+    max-width: 100%;
+    height: 620px; /* Giảm chiều cao */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #ffffff;
+  }
+  
+  .register-image {
+    flex: 1;
+    background-color: #f5f5f5;
+  }
+  
+  .register-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .register-form {
+    flex: 1.2; /* Điều chỉnh tỷ lệ cho form rộng hơn */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    h3{
+      font-weight: bold;
+    }
+  }
+  
+  .register-title {
+    text-align: center;
+    a{
+      font-family: 'Cursive', sans-serif;
+      color: map.get($theme-color,"main");
+      font-size: 2.5rem;
+      /* margin-bottom: 3px; */
+      padding-top: 10px;
+      text-decoration: none;
+    }
+    
+  }
+  
+  .register-form h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .register-form label {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 15px;
+  }
+  
+  .register-form input[type="text"],
+  .register-form input[type="email"],
+  .register-form input[type="password"],
+  .register-form input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9rem;
+  }
+  
+  .gender-options {
+    display: flex;
+    gap: 10px;
+    margin-top: 0px;
+    input{width: 10px;
+    height: 10px;}
+  }
+  
+  .terms {
+    font-size: 0.85rem;
+    color: #555;
+    margin-top: 15px;
+  }
+  
+  .terms a {
+    color: map.get($theme-color,"main");
+    text-decoration: none;
+  }
+  
+  .register-button {
+    width: 100%;
+    padding: 12px;
+    background-color: map.get($theme-color,"main");
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .register-button:hover {
+    background-color: #ff3e73;
+  }
+  
+  .login-link {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 20px;
+  }
+  
+  .login-link a {
+    color: map.get($theme-color,"main");
+    text-decoration: none;
+    padding-bottom: 10px;
+}
+  
+  .login-link a:hover {
+    text-decoration: underline;
+  }
+  
+  .checkb{
+    width: 10px;
+    height: 10px;
+  }

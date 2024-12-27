@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./profile.scss";
-import axios from "axios";
 import { ROUTER } from "../../../Routers/router";
 import NavBar from "../../../Components/User/Navbar/navbar";
+import { deleteUser, updateUserInfor } from "../../../Api/apiManageUser";
 
 export const Profile = () => {
     const [user, setUser] = useState(null);
@@ -37,14 +37,12 @@ export const Profile = () => {
 
     const handleDeleteAccount = async () => {
         if (!user) return;
-
         try {
-            // Gọi API DELETE
-            await axios.delete(`https://backendebook.vercel.app/users/${user.user_id}`);
+            await deleteUser(user.user_id);
             alert("Tài khoản đã được xóa!");
-            localStorage.removeItem("user");
             setUser(null);
             navigate(ROUTER.USER.HOME);
+            localStorage.removeItem("user");
         } catch (error) {
             console.error("Lỗi khi xóa tài khoản:", error);
             alert("Xóa tài khoản thất bại. Vui lòng thử lại.");
@@ -56,14 +54,11 @@ export const Profile = () => {
 
         try {
             // Gọi API PUT để cập nhật thông tin
-            const response = await axios.put(
-                `https://backendebook.vercel.app/users/${user.user_id}`,
-                formData // Gửi thông tin đã cập nhật
-            );
+            const response = await updateUserInfor(user.user_id,formData)
             console.log(formData);
             alert("Thông tin tài khoản đã được cập nhật!");
-            localStorage.setItem("user", JSON.stringify(response.data));
-            setUser(response.data);
+            localStorage.setItem("user", JSON.stringify(response));
+            setUser(response);
             setIsUpdateModalOpen(false);
         } catch (error) {
             console.error("Lỗi khi cập nhật tài khoản:", error);

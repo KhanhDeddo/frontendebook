@@ -1,46 +1,45 @@
-import axios from 'axios';
-const apiUrl = process.env.REACT_APP_API_URL;
+import apiClient from './apiClient';
 
-// API lấy danh sách user
+const handleApiError = (error, defaultMessage) => {
+  throw new Error(error.response?.data?.error || defaultMessage);
+};
+
+// Lấy danh sách người dùng
 export const fetchListUser = async () => {
   try {
-    const response = await axios.get(`${apiUrl}/users`);
+    const response = await apiClient.get('/users');
     return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
-    throw error;
+    handleApiError(error, "Lỗi khi lấy danh sách người dùng");
   }
 };
 
-// API create user
+// Tạo mới người dùng
 export const createUser = async (data) => {
   try {
-    const response = await axios.post(`${apiUrl}/users`,data);
+    const response = await apiClient.post('/users', data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
-    throw error;
+    handleApiError(error, "Lỗi khi tạo người dùng");
   }
 };
 
-// API cập nhật thông tin user
-export const updateUserInfor = async (user_id,data) => {
+// Cập nhật thông tin người dùng
+export const updateUserInfor = async (user_id, data) => {
   try {
-    const response = await axios.put(`${apiUrl}/users/${user_id}`,data);
+    const response = await apiClient.put(`/users/${user_id}`, data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
-    throw error;
+    handleApiError(error, "Lỗi khi cập nhật thông tin người dùng");
   }
 };
 
-// API xóa user
+// Xóa người dùng
 export const deleteUser = async (user_id) => {
   try {
-    await axios.delete(`${apiUrl}/users/${user_id}`);
+    await apiClient.delete(`/users/${user_id}`);
     return;
   } catch (error) {
-    console.error('Error fetching users:', error);
-    throw error;
+    handleApiError(error, "Lỗi khi xóa người dùng");
   }
 };

@@ -1,23 +1,26 @@
-import axios from 'axios';
-const apiUrl = process.env.REACT_APP_API_URL;
+import apiClient from './apiClient';
 
-// Hàm lấy danh sách books
+const handleApiError = (error, defaultMessage) => {
+  throw new Error(error.response?.data?.error || defaultMessage);
+};
+
+// Lấy danh sách sách
 export const fetchListBook = async () => {
   try {
-    const response = await axios.get(`${apiUrl}/books`);
+    const response = await apiClient.get('/books');
     return response.data;
   } catch (error) {
-    console.error('Error fetching books:', error);
-    throw error;
+    handleApiError(error, "Lỗi khi lấy danh sách sách");
   }
 };
 
+
+//  Lấy thông tin chi tiết sách theo ID
 export const fetchBookById = async (book_id) => {
   try {
-    const response = await axios.get(`${apiUrl}/books/${book_id}`);
+    const response = await apiClient.get(`/books/${book_id}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching books:', error);
-    throw error;
+    handleApiError(error, "Lỗi khi lấy thông tin sách");
   }
 };

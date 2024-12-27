@@ -1,34 +1,35 @@
-import axios from 'axios';
-const apiUrl = process.env.REACT_APP_API_URL;
+import apiClient from './apiClient';
 
+const handleApiError = (error, defaultMessage) => {
+  throw new Error(error.response?.data?.error || defaultMessage);
+};
 
-// Hàm lấy danh sách Order
+// Lấy danh sách đơn hàng
 export const fetcListOrder = async () => {
   try {
-    const response = await axios.get(`${apiUrl}/orders`);
+    const response = await apiClient.get('/orders');
     return response.data;
   } catch (error) {
-    console.error('Error:', error);
-    throw new Error(error.response?.data?.error || "Lỗi không xác định khi fetcListOrder");
+    handleApiError(error, "Lỗi khi lấy danh sách đơn hàng");
   }
 };
 
+// Tạo đơn hàng mới
 export const createOrder = async (orderData) => {
   try {
-    const response = await axios.post(`${apiUrl}/orders`, orderData);
+    const response = await apiClient.post('/orders', orderData);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Lỗi không xác định khi createOrder");
+    handleApiError(error, "Lỗi khi tạo đơn hàng");
   }
 };
 
-
+// Tạo món hàng trong đơn hàng
 export const createOrderItem = async (orderItemData) => {
   try {
-    const response = await axios.post(`${apiUrl}/orderitems`, orderItemData);
+    const response = await apiClient.post('/orderitems', orderItemData);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Lỗi không xác định khi createOrderItem");
+    handleApiError(error, "Lỗi khi tạo món hàng trong đơn hàng");
   }
 };
-

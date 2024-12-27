@@ -1,0 +1,191 @@
+@use "sass:map";
+@import '../../../Style/theme';
+.body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #f4f4f4;
+}
+
+.home-title {
+	font-size: 2rem;
+	font-weight: bold;
+	color: #333;
+	padding: 20px;
+}
+
+.order-container {
+	margin: 30px 20px 20px 20px;
+	padding: 20px;
+	background-color: #fff;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.order-title {
+	font-size: 1.5rem;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 15px;
+}
+
+.order-item {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 20px;
+	margin-top: 10px;
+}
+
+.order-image {
+	width: 50px;
+	height: auto;
+	border-radius: 8px;
+	margin-bottom: 20px;
+}
+
+.order-info {
+	background-color: #f9f9f9;
+	padding: 15px;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.order-info div {
+	margin-bottom: 15px;
+	font-size: 1rem;
+	color: #555;
+}
+
+.order-name {
+	font-size: 1.2rem;
+	font-weight: bold;
+	color: #333;
+}
+
+.order-date,
+.order-note,
+.order-price {
+	font-weight: bold;
+	background: #a1c2e6;
+	color: #3079da;
+	padding: 4px;
+}
+
+.order-client {
+	display: flex;
+	align-items: center;
+}
+
+.order-client span {
+	margin-left: 10px;
+	color: #141618;
+}
+
+.client-name {
+	font-weight: bold;
+}
+
+.client-email,
+.client-phone {
+	color: #555;
+}
+
+@media (max-width: 768px) {
+	.order-container {
+		margin: 10px;
+		padding: 15px;
+	}
+
+	.home-title {
+		font-size: 1.5rem;
+		padding: 15px;
+	}
+
+	.order-title {
+		font-size: 1.2rem;
+	}
+
+	.order-info {
+		padding: 10px;
+	}
+
+	.order-info div {
+		font-size: 0.9rem;
+	}
+
+	.order-name {
+		font-size: 1rem;
+	}
+
+	.order-client {
+		font-size: 0.9rem;
+	}
+}
+
+.input-search{
+	height: 24px !important;
+	width: 180px !important;
+
+}
+
+.header-page {
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+	margin-bottom: 8px;
+}
+.order-operation{
+	display: flex;
+	column-gap: 5px;
+	.button-operation{
+		background-color: #4CAF50; /* Green */
+		border: none;
+		color: white;
+		padding: 5px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 13px;
+		cursor: pointer;
+		border-radius: 4px;
+		color: #fff;
+		&:disabled{
+			background-color: #b2b2b2;
+		}
+	}
+	.button-cancel{
+		background-color:rgba(194, 3, 3, 0.801);
+		border: none;
+		color: white;
+		padding: 5px;
+		text-align: center;
+		text-decoration: none;
+		display: inline-block;
+		font-size: 13px;
+		cursor: pointer;
+		border-radius: 4px;
+		color: #fff;
+		&:disabled{
+			background-color: #b2b2b2;
+		}
+	}
+}
+.admin-order-navbar{
+	display: flex;
+	column-gap: 5px;
+	button{
+		padding: 5px;
+		font-size: 15px;
+		border: 1px solid ;
+		border-radius: 8px;
+		background-color: map.get($theme-color,"main");
+		color:white;
+		&:hover{
+		background-color: orange;
+		}
+	}
+	.active{
+		background-color: red;
+	}
+	
+}

@@ -11,3 +11,8 @@ npm install --legacy-peer-deps
 
 npm install react-multi-carousel
 npm install react-data-table-component
+
+npm install chart.js react-chartjs-2 --legacy-peer-deps
+npm install styled-components --legacy-peer-deps
+
+

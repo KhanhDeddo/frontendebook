@@ -24,3 +24,14 @@ export const fetchBookById = async (book_id) => {
     handleApiError(error, "Lỗi khi lấy thông tin sách");
   }
 };
+
+
+export const updateBook = async (book_id,data) => {
+  try {
+    const response = await apiClient.put(`/books/${book_id}`,data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || "Lỗi không xác định");
+  }
+};
+

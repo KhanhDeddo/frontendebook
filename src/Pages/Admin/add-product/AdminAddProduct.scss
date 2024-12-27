@@ -1,0 +1,149 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.body {
+	font-family: 'Roboto', sans-serif;
+	background-color: #f4f6f9;
+	color: #333;
+}
+
+.admin-add-product-container {
+	width: 100%;
+	max-width: 1200px;
+	margin: 30px auto;
+	background-color: #ffffff;
+	padding: 30px;
+	border-radius: 10px;
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+	font-size: 1.6rem;
+	font-weight: 600;
+	color: #2c3e50;
+	margin-bottom: 20px;
+	border-bottom: 2px solid #ecf0f1;
+	padding-bottom: 10px;
+}
+
+.form-container {
+	display: flex;
+	flex-direction: column;
+	gap: 25px;
+}
+
+.form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+label {
+	font-size: 1rem;
+	color: #34495e;
+	font-weight: 500;
+}
+
+.input,
+.textarea {
+	width: 100%;
+	padding: 20px;
+	font-size: 1rem;
+	border: 2px solid #353333;
+	border-radius: 8px;
+	outline: none;
+	transition: all 0.3s ease;
+
+	&:focus {
+		border-color: #3498db;
+		box-shadow: inset 0 2px 5px rgba(52, 152, 219, 0.2);
+	}
+
+	&::placeholder {
+		color: #7f8c8d;
+	}
+}
+
+.textarea {
+	resize: vertical;
+	min-height: 150px;
+}
+
+.form-group-container {
+	display: flex;
+	justify-content: space-between;
+	gap: 25px;
+}
+.form-group-container input {
+	width: 100%;
+}
+
+.image-upload-container {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+#product-image {
+	font-size: 1rem;
+	margin-bottom: 20px;
+	height: 70px;
+}
+
+.upload-btn {
+	padding: 12px 30px;
+	background-color: #3498db;
+	color: white;
+	font-size: 1rem;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	width: 200px;
+	transition: background-color 0.3s ease;
+
+	&:hover {
+		background-color: #2980b9;
+	}
+}
+
+.form-actions {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+}
+
+.submit-btn {
+	padding: 14px 40px;
+	font-size: 1.2rem;
+	background-color: rgb(206, 110, 110);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+
+	&:hover {
+		background-color: #27ae60;
+	}
+}
+
+@media (max-width: 768px) {
+	.admin-add-product-container {
+		width: 90%;
+	}
+
+	.form-group-container {
+		flex-direction: column;
+	}
+
+	.image-upload-container {
+		flex-direction: column;
+	}
+
+	.form-actions {
+		flex-direction: column;
+	}
+}

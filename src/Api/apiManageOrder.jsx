@@ -54,4 +54,12 @@ export const fetchListOrderByUser = async (user_id) => {
   }
 };
 
-
+// Hàm lấy danh sách listOrderItemByOrderId
+export const fetchListOrderItemByOrderId = async (order_id) => {
+  try {
+    const response = await apiClient.get(`/orderitems/${order_id}`);
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Lỗi khi update hàng trong đơn hàng");
+  }
+};

@@ -1,0 +1,78 @@
+@use "sass:map";
+@import '../../../Style/theme';
+
+.bar-chart{
+    width: 100%;
+    
+}
+.button-statistics{
+    padding-top: 30px;
+    width: 100%;
+    .btn-stt-option{
+        display: flex;
+        button{
+            width: 100%;
+            background-color: map.get($theme-color,"main");
+            font-size: 14px;
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid lightblue;
+            border-radius: 5px;
+            color:white;
+            font-weight: bold;
+            &:hover{
+                background-color: blue;
+            }
+        }
+        input{
+            width: 40%;
+        }
+    }
+}
+.thong-ke{
+    padding: 8px;
+    height: 100%;
+    display: block;
+    justify-items: center;
+    align-items: center;
+    h3{
+        padding-top: 5px;
+    }
+    h2{
+        padding: 15px;
+    }
+    .thong-ke-option{
+        display: block;
+        justify-items: center;
+        border: 1px solid map.get($theme-color,"main");
+        border-radius: 5px;
+        margin: 8px;
+        width: 70%;
+        height: 95px;
+    }
+}
+.thong-ke2{
+    margin: 10px 0;
+    height: 100%;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    h3{
+        padding-top: 5px;
+    }
+    h2{
+        padding: 15px;
+    }
+    .thong-ke-option{
+        display: block;
+        justify-items: center;
+        border: 1px solid map.get($theme-color,"main");
+        border-radius: 5px;
+        margin: 8px;
+        width: 70%;
+        height: 100%;
+    }
+}
+.statistics{
+    height:100%
+}

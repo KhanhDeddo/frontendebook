@@ -5,9 +5,11 @@
   "dependencies": {
     "antd": "^5.22.6",
     "axios": "^1.7.9",
+    "chart.js": "^4.4.7",
     "cra-template": "1.2.0",
     "https-browserify": "^1.0.0",
     "react": "^19.0.0",
+    "react-chartjs-2": "^5.2.0",
     "react-data-table-component": "^7.6.2",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
@@ -17,7 +19,8 @@
     "react-slick": "^0.30.3",
     "sass": "^1.83.0",
     "slick-carousel": "^1.8.1",
-    "stream-http": "^3.2.0"
+    "stream-http": "^3.2.0",
+    "styled-components": "^6.1.13"
   },
   "scripts": {
     "start": "react-scripts start",

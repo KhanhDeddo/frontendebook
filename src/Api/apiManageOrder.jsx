@@ -33,3 +33,25 @@ export const createOrderItem = async (orderItemData) => {
     handleApiError(error, "Lỗi khi tạo món hàng trong đơn hàng");
   }
 };
+
+
+export const updateOrder = async (order_id,data) => {
+  try {
+    const response = await apiClient.put(`/orders/${order_id}`, data);
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Lỗi khi update hàng trong đơn hàng");
+  }
+};
+
+// Hàm lấy danh sách listOrderByUser
+export const fetchListOrderByUser = async (user_id) => {
+  try {
+    const response = await apiClient.get(`/orders/${user_id}`);
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Lỗi khi update hàng trong đơn hàng");
+  }
+};
+
+

@@ -7,6 +7,8 @@ import { Profile } from "../Pages/User/Profile/profile";
 import RegisterPage from "../Auth/Register/register";
 import { Shop } from "../Pages/User/Shop/shop";
 import BookDetails from "../Pages/User/Product/product";
+import { CartPage } from "../Pages/User/Cart/cart";
+import Orders from "../Pages/User/Order/order";
 
 
 const RenderRouter = () => {
@@ -17,8 +19,8 @@ const RenderRouter = () => {
         { path: ROUTER.USER.REGISTER, Component: <RegisterPage /> },
         { path: ROUTER.USER.PROFILE, Component: <Profile /> },
         { path: ROUTER.USER.PRODUCTS, Component: <Shop /> },
-        // { path: ROUTER.USER.SHOPCART, Component: <CartPage /> },
-        // { path: ROUTER.USER.ORDERS, Component: <Orders /> },
+        { path: ROUTER.USER.SHOPCART, Component: <CartPage /> },
+        { path: ROUTER.USER.ORDERS, Component: <Orders /> },
         { path: ROUTER.USER.PRODUCTDETAIL, Component: <BookDetails /> },
         // { path: ROUTER.USER.PAYMENT, Component: <PaymentPage /> },
     ];

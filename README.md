@@ -10,3 +10,4 @@ npm install --legacy-peer-deps
 
 
 npm install react-multi-carousel
+npm install react-data-table-component

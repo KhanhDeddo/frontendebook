@@ -1,0 +1,145 @@
+@use "sass:map";
+@import "../../../Style/theme";
+.navbar-orders{
+    color:map.get($theme-color,"normal-text");
+    line-height: 40px;
+    margin-top: 5px;
+    padding-right: 20px;
+    margin-bottom: 50px;
+    height: 100%;
+    width: 80%;
+    .search-orders{
+        padding-left: 10px;
+    }
+    ul{
+        li{
+            cursor: pointer;
+            list-style: none;
+            font-weight: bold;
+            font-size: 20px;
+            border: 1px solid #ebebeb;
+            border-radius: 5px;
+            margin-top: 5px;
+            padding-left: 10px;
+            &:hover{
+                color:map.get($theme-color,"main")
+            }
+        }
+    }
+}
+.header-orders{
+    display: flex;
+    padding: 0 0px 0 10px;
+    justify-content: space-between;
+    // justify-content: flex-start;
+    // column-gap: 14px;
+    align-items: center;
+    height: 100p;
+    font-size: 20px;
+    font-weight: bold;
+    color: map.get($theme-color,"normal-text");
+    border: 1px solid #ebebeb;
+    border-radius: 5px;
+    p{
+        display: inline-block;
+    }
+}
+.card-order{
+    height: 80px;
+    margin: 50px;
+    background-color: aquamarine;
+}
+.col-lg-2{
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    flex: 0 0 16.5%;
+    max-width: 16.5%;
+}
+.infor{
+    display: block;
+    justify-content: start;
+    padding-left: 50px;
+    padding-right: 10px;
+    p {
+        font-size: 15px;
+        max-width: 180px; /* Giới hạn chiều rộng đoạn văn */
+        word-wrap: break-word; /* Xuống dòng khi từ quá dài */
+      }
+      
+}
+.order{
+    display: flex;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 0 10px 0 10px;
+    justify-content: space-between;
+    height: 100p;
+    font-size: 17px;
+    color: map.get($theme-color,"normal-text");
+    border: 1px solid #ebebeb;
+    border-radius: 5px;
+    p{
+        display: inline-block;
+    }
+}
+.cancel-order{
+    width: 100%;
+    height: 70%;
+    background-color: rgb(255, 0, 0);
+    border: 1px solid rgb(255, 0, 0);
+    font-size: 15px;
+    font-weight: bold;
+    align-items: center;
+    border-radius: 5px;
+    color:white;
+    padding: 5px;
+}
+
+.re-order{
+    // display: flex;
+    width: 100%;
+    height: 70%;
+    background-color: orange;
+    border: 1px solid orange;
+    font-size: 15px;
+    font-weight: bold;
+    align-items: center;
+    border-radius: 5px;
+    color:white;
+    padding: 5px;
+    // margin-left: 30px;
+
+}
+
+.finish-order{
+    // display: flex;
+    width: 100%;
+    height: 70%;
+    background-color: map.get($theme-color,"main");
+    border: 1px solid map.get($theme-color,"main");
+    font-size: 15px;
+    font-weight: bold;
+    align-items: center;
+    border-radius: 5px;
+    color:white;
+    padding: 5px;
+    // margin-left: 30px;
+    &:disabled{
+        background-color: #b2b2b2;
+        border: 1px solid ;
+    }
+
+}
+.cancel-order-disabled{
+    width: 100%;
+    height: 70%;
+    background-color: rgba(255, 0, 0, 0.322);
+    border: 1px solid rgba(255, 0, 0, 0);
+    font-size: 15px;
+    font-weight: bold;
+    align-items: center;
+    border-radius: 5px;
+    color:white;
+    padding: 5px;
+}

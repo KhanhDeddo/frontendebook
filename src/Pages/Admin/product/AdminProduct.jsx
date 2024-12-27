@@ -95,8 +95,9 @@ const AdminProduct = () => {
 				  className="custom-switch"
 				  onChange={(checked) => {
 					const newStatus = checked ? "Đang bán" : "Ngưng bán";
+					loadDataGrid(search)
 					updateStatus(row.id,newStatus)
-					// loadDataGrid(search)
+					loadDataGrid(search)
 					console.log(`Trạng thái mới của sách ID ${row.id}: ${newStatus}`);
 				  }}
 				/>

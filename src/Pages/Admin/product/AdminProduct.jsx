@@ -59,6 +59,7 @@ const AdminProduct = () => {
 		try{
 			const data = {status_book : status}
 			await updateBook(id,data)
+			setCheckUpdate(!checkUpdate)
 		}catch(error){}
 	}
 	useEffect(()=>{
@@ -97,7 +98,6 @@ const AdminProduct = () => {
 				  onChange={(checked) => {
 					const newStatus = checked ? "Đang bán" : "Ngưng bán";
 					updateStatus(row.id,newStatus)
-					setCheckUpdate(!checkUpdate)
 					console.log(`Trạng thái mới của sách ID ${row.id}: ${newStatus}`);
 				  }}
 				/>

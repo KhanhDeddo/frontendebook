@@ -15,6 +15,7 @@ const AdminProduct = () => {
 	const [showPopup, setshowPopup] = useState(false);
 	const [currentFilter, setCurrentFilter] = useState(""); // Bộ lọc hiện tại
 	const [activeButton, setActiveButton] = useState(0); // Index của nút active
+	const [checkUpdate, setCheckUpdate] = useState(false);
 	const loadDataGrid = async (value) => {
 		try {
 			const data = await fetchListBookAdmin({ search: value });
@@ -62,7 +63,7 @@ const AdminProduct = () => {
 	}
 	useEffect(()=>{
 		loadDataGrid(search);
-    }, [])
+    }, [checkUpdate])
 
 	const handleEdit = (row) => {
 		setrowSelected(row);  // Lưu thông tin hàng được chọn
@@ -95,9 +96,8 @@ const AdminProduct = () => {
 				  className="custom-switch"
 				  onChange={(checked) => {
 					const newStatus = checked ? "Đang bán" : "Ngưng bán";
-					loadDataGrid(search)
 					updateStatus(row.id,newStatus)
-					loadDataGrid(search)
+					setCheckUpdate(!checkUpdate)
 					console.log(`Trạng thái mới của sách ID ${row.id}: ${newStatus}`);
 				  }}
 				/>

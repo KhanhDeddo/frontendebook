@@ -71,7 +71,7 @@ const AdminOrder = () => {
                 if(updatedRow.status === "Đã xác nhận"){
                     orderDetail.map((item,key)=>{
                         const book = listBook.filter((book)=> book.id === item.book_id)
-                        setBookUpdate(book);
+                        // setBookUpdate(book);
                         console.log(bookUpdate)
                     })
                 }

@@ -93,10 +93,10 @@ const AdminUser = () => {
 		setrowSelected(row);
 		setshowPopup(true);
 	}
-	const handleAdd = () => {
-		setrowSelected({});
-		setshowPopup(true)
-	}
+	// const handleAdd = () => {
+	// 	setrowSelected({});
+	// 	setshowPopup(true)
+	// }
 
 	const handleChange = (event, property) => {
 		var value = event.target.value;

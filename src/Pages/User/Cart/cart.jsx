@@ -5,6 +5,8 @@ import { fetchListBook } from "../../../Api/apiManageBook";
 import { fetchListCart, fetchListCartItemByUser, updateCartItem } from "../../../Api/apiManageCart";
 import { createOrder, createOrderItem, fetcListOrder } from "../../../Api/apiManageOrder";
 import NavBar from "../../../Components/User/Navbar/navbar";
+import { useDispatch, useSelector } from "react-redux";
+import { updateData } from "../../../Redux/dataSlice";
 
 export const CartPage = () => {
   const location = useLocation();
@@ -18,6 +20,8 @@ export const CartPage = () => {
   const [changeQuantityCartItem,setChangeQuantityCartItem] = useState(false);
   const [listOrder,setListOrder] = useState([]);
   const [listCart,setListCart] = useState([]);
+  const checkDataChange = useSelector((state) => state.data.value); // Lấy state
+  const dispatch = useDispatch(); //hàm cập nhật dư liệu :v
  
   // Tính tổng tiền
   const total = selectedBookIds.reduce(
@@ -76,7 +80,7 @@ export const CartPage = () => {
       const result = await response.json();
       console.log("Delete successful:", result);
       // alert(`Item with id ${book_id} deleted successfully!`);
-
+      dispatch(updateData(!checkDataChange))
       // Cập nhật danh sách giỏ hàng bằng cách loại bỏ item vừa xóa
       setListCartItem((prevList) =>
         prevList.filter((item) => item.book_id !== book_id)

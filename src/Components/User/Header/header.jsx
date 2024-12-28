@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { ROUTER } from "../../../Routers/router";
 import { AuToSlider } from "../Slider/sliderAd";
 import { fetchListCartItemByUser } from "../../../Api/apiManageCart";
+import { useSelector } from "react-redux";
 
 
 
@@ -17,6 +18,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const checkDataChange = useSelector((state) => state.data.value); // Lấy state
   useEffect(() => {
     const storedUser = localStorage.getItem("user"); // Lấy thông tin người dùng từ localStorage
     if (storedUser) {
@@ -94,7 +96,7 @@ useEffect(() => {
     if (user) {
         loadListCartItem(user.user_id);
     }
-}, [user]);
+}, [user,checkDataChange]);
 
   const total = listCartItem.reduce(
     (sum, item) => sum + Number(item.price_at_purchase),

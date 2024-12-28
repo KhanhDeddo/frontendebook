@@ -7,6 +7,8 @@ import {createCartItem, fetchCartItemByCartIdAndBookId, fetchListCart, updateCar
 import NavBar from "../../../Components/User/Navbar/navbar";
 import { CardBook } from "../../../Components/User/Card/card";
 import { createOrder, createOrderItem, fetcListOrder } from "../../../Api/apiManageOrder";
+import { useDispatch, useSelector} from "react-redux";
+import { updateData } from "../../../Redux/dataSlice";
 
 
 const BookDetails = ({ onCartUpdated }) => {
@@ -20,6 +22,8 @@ const BookDetails = ({ onCartUpdated }) => {
   const location = useLocation();
   const [payment,setPayment] = useState(false);
   const [listCart,setListCart] = useState([]);
+  const checkDataChange = useSelector((state) => state.data.value); // Lấy state
+  const dispatch = useDispatch(); //hàm cập nhật dư liệu :v
 
   // Lấy thông tin người dùng từ localStorage
   useEffect(() => {
@@ -218,6 +222,7 @@ const BookDetails = ({ onCartUpdated }) => {
         if (onCartUpdated) {
           onCartUpdated();
         }
+        dispatch(updateData(!checkDataChange))
         alert(`Đã thêm ${book.title} vào giỏ hàng!`);
       }
       checkBookInCart();

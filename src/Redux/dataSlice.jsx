@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const dataSlice = createSlice({
   name: 'data',
   initialState: {
-    value: 'Initial Redux Data',
+    value: true,
   },
   reducers: {
     updateData: (state, action) => {

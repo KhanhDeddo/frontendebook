@@ -9,6 +9,7 @@ import { CardBook } from "../../../Components/User/Card/card";
 import { createOrder, createOrderItem, fetcListOrder } from "../../../Api/apiManageOrder";
 import { useDispatch, useSelector} from "react-redux";
 import { updateData } from "../../../Redux/dataSlice";
+import Nortification from "../../../Components/User/Notification/notification";
 
 
 const BookDetails = ({ onCartUpdated }) => {
@@ -146,13 +147,13 @@ const BookDetails = ({ onCartUpdated }) => {
         // Kiểm tra từng trường yêu cầu
         for (let field of requiredFields) {
           if (!order[field] || order[field].trim() === "") {
-            alert(`Vui lòng nhập đầy đủ thông tin: ${field.replace(/_/g, " ")}!`);
+            Nortification(`Vui lòng nhập đầy đủ thông tin: ${field.replace(/_/g, " ")}!`);
             return; // Ngừng thực hiện nếu phát hiện trường còn thiếu
           }
         }
         await createOrder(order);
         console.log(listOrder.length+1)
-        alert("Đơn hàng được đặt thành công.")
+        Nortification("Đơn hàng được đặt thành công.")
        
           //(order_id,book_id,quantity,price_per_item,total_price)
         const bookorder = {
@@ -166,7 +167,7 @@ const BookDetails = ({ onCartUpdated }) => {
         createOrderItem(bookorder);
         setPayment(false)
     } catch (error) {
-      alert(`Lỗi khi thêm vào giỏ hàng: ${error.message}`);
+      Nortification(`Lỗi khi thêm vào giỏ hàng: ${error.message}`);
       console.error("Lỗi thêm vào giỏ hàng:", error);
     }
   };
@@ -183,11 +184,11 @@ const BookDetails = ({ onCartUpdated }) => {
   // Thêm hoặc cập nhật sách trong giỏ hàng
   const handleAddCartAction = async () => {
     if (isOutOfStock) {
-      alert("Sản phẩm đã ngưng bán và không thể thêm vào giỏ hàng.");
+      Nortification("Sản phẩm đã ngưng bán và không thể thêm vào giỏ hàng.");
       return;
     }
     if (!user) {
-      alert("Bạn chưa đăng nhập, vui lòng đăng nhập!");
+      Nortification("Bạn chưa đăng nhập, vui lòng đăng nhập!");
       return;
     }
 
@@ -198,7 +199,8 @@ const BookDetails = ({ onCartUpdated }) => {
           price_at_purchase: Number(cartItem.price_at_purchase) + Number(book.price) * quantity,
         };
         await updateCartItem(cartItem.cart_id, id, updatedData);
-        alert(`Đã cập nhật ${book.title} trong giỏ hàng!`);
+        dispatch(updateData(!checkDataChange))
+        Nortification(`Đã thêm ${book.title} vào giỏ hàng!`);
       } else {
         // Lọc các giỏ hàng của user
         const cartOfUser = listCart.filter((cart) => cart.user_id === user.user_id);
@@ -223,21 +225,21 @@ const BookDetails = ({ onCartUpdated }) => {
           onCartUpdated();
         }
         dispatch(updateData(!checkDataChange))
-        alert(`Đã thêm ${book.title} vào giỏ hàng!`);
+        Nortification(`Đã thêm ${book.title} vào giỏ hàng!`);
       }
       checkBookInCart();
     } catch (error) {
       console.error("Error handling cart action:", error);
-      alert("Lỗi khi xử lý giỏ hàng. Vui lòng thử lại.");
+      Nortification("Lỗi khi xử lý giỏ hàng. Vui lòng thử lại.");
     }
   };
 
   // Mua ngay
   const handleBuyAction = () => {
     if (isOutOfStock) {
-      alert("Sản phẩm đã ngưng bán và không thể mua.");
+      Nortification("Sản phẩm đã ngưng bán và không thể mua.");
     } else if (!user) {
-      alert("Bạn chưa đăng nhập, vui lòng đăng nhập!");
+      Nortification("Bạn chưa đăng nhập, vui lòng đăng nhập!");
     } else {
       setPayment(true)
     }

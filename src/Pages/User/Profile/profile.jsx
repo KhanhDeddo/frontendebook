@@ -4,6 +4,9 @@ import "./profile.scss";
 import { ROUTER } from "../../../Routers/router";
 import NavBar from "../../../Components/User/Navbar/navbar";
 import { deleteUser, updateUserInfor } from "../../../Api/apiManageUser";
+import Notification from "../../../Components/User/Notification/notification";
+import { useDispatch, useSelector } from "react-redux";
+import { updateData } from "../../../Redux/dataSlice";
 
 export const Profile = () => {
     const [user, setUser] = useState(null);
@@ -11,6 +14,8 @@ export const Profile = () => {
     const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
     const [formData, setFormData] = useState({});
     const navigate = useNavigate();
+    const checkDataChange = useSelector((state) => state.data.value); // Lấy state
+    const dispatch = useDispatch(); //hàm cập nhật dư liệu :v
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -33,19 +38,21 @@ export const Profile = () => {
         localStorage.removeItem("user");
         setUser(null);
         navigate(ROUTER.USER.LOGIN);
+        Notification("Bạn đã đăng xuất thành công !");
     };
 
     const handleDeleteAccount = async () => {
         if (!user) return;
         try {
             await deleteUser(user.user_id);
-            alert("Tài khoản đã được xóa!");
+            Notification("Tài khoản đã được xóa!");
             setUser(null);
             navigate(ROUTER.USER.HOME);
             localStorage.removeItem("user");
         } catch (error) {
             console.error("Lỗi khi xóa tài khoản:", error);
-            alert("Xóa tài khoản thất bại. Vui lòng thử lại.");
+            Notification("Xóa tài khoản thất bại. Vui lòng thử lại.");
+            setIsDeleteConfirmOpen(false)
         }
     };
 
@@ -56,13 +63,14 @@ export const Profile = () => {
             // Gọi API PUT để cập nhật thông tin
             const response = await updateUserInfor(user.user_id,formData)
             console.log(formData);
-            alert("Thông tin tài khoản đã được cập nhật!");
+            Notification("Thông tin tài khoản đã được cập nhật!");
+            dispatch(updateData(!checkDataChange))
             localStorage.setItem("user", JSON.stringify(response));
             setUser(response);
             setIsUpdateModalOpen(false);
         } catch (error) {
             console.error("Lỗi khi cập nhật tài khoản:", error);
-            alert("Cập nhật tài khoản thất bại. Vui lòng thử lại.");
+            Notification("Cập nhật tài khoản thất bại. Vui lòng thử lại.");
             console.log(formData);
         }
     };

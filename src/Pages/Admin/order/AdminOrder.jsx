@@ -3,7 +3,8 @@ import "./AdminOrder.scss";
 import DataTable from "react-data-table-component";
 import { fetchListOrderAdmin } from "../../../Api/apiHomeAdmin";
 import { fetchListOrderItemByOrderId, updateOrder } from "../../../Api/apiManageOrder";
-import { fetchListBook } from "../../../Api/apiManageBook";
+import { fetchListBook, updateBook } from "../../../Api/apiManageBook";
+import Notification from "../../../Components/User/Notification/notification";
 
 const AdminOrder = () => {
     const [listData, setListData] = useState([]); // Dữ liệu chính
@@ -62,6 +63,29 @@ const AdminOrder = () => {
         );
     };
 
+    const updateQuantityBook = async (order_id) => {
+        try {
+            const listOrderItem = await fetchListOrderItemByOrderId(order_id);
+    
+            // Tạo danh sách các Promise để giảm số lần gọi tuần tự
+            const updatePromises = listOrderItem.map((item) => {
+                const book = listBook.find((book) => book.id === item.book_id); // Dùng find thay vì filter
+                if (book) {
+                    return updateBook(book.id, { stock_quantity: book.stock_quantity - item.quantity });
+                }
+                console.error(`Không tìm thấy sách với id ${item.book_id}`);
+                return null; // Trả về null nếu không tìm thấy
+            });
+    
+            // Chờ tất cả các Promise hoàn thành
+            await Promise.all(updatePromises.filter(Boolean)); // Lọc bỏ null khỏi danh sách
+    
+        } catch (err) {
+            console.error("Lỗi khi Update số lượng sách: ", err);
+        }
+    };
+    
+
     // Hàm cập nhật trạng thái đơn hàng
     const handleConfirm = async (row) => {
         const currentIndex = CONFIRM_STATUS.indexOf(row.status);
@@ -69,16 +93,13 @@ const AdminOrder = () => {
             const updatedRow = { ...row, status: CONFIRM_STATUS[currentIndex + 1] };
             try {
                 if(updatedRow.status === "Đã xác nhận"){
-                    // orderDetail.map((item,key)=>{
-                    //     const book = listBook.filter((book)=> book.id === item.book_id)
-                    //     // setBookUpdate(book);
-                    //     console.log(bookUpdate)
-                    // })
+                    updateQuantityBook(updatedRow.order_id)
                 }
                 updatedRow.status === "Hoàn thành" ?
                     await updateOrder(updatedRow.order_id, { status: updatedRow.status,payment_status:"Đã thanh toán" })
                     :await updateOrder(updatedRow.order_id, { status: updatedRow.status });
                 await loadDataGrid(); // Reload dữ liệu sau khi cập nhật
+                Notification(`Cập nhật trạng thái thành công !`)
             } catch (err) {
                 console.error("Lỗi khi cập nhật trạng thái:", err);
             }

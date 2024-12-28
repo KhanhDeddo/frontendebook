@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ROUTER } from "../../Routers/router";
 import './login.scss'
 import { fetchListUser } from "../../Api/apiManageUser";
+import Notification from "../../Components/User/Notification/notification";
 
 
 const LoginPage = () => {
@@ -46,6 +47,7 @@ const LoginPage = () => {
       // Đăng nhập thành công
       localStorage.setItem("user", JSON.stringify(user)); // Lưu thông tin user vào localStorage
       user.user_is_admin ? navigate(ROUTER.ADMIN.HOME) : navigate(ROUTER.USER.HOME);
+      Notification("Welcome to EBook !");
     } else {
       // Đăng nhập thất bại
       setFormError("Tài khoản hoặc mật khẩu không đúng. Vui lòng thử lại.");

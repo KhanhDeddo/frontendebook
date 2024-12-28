@@ -7,6 +7,7 @@ import { createOrder, createOrderItem, fetcListOrder } from "../../../Api/apiMan
 import NavBar from "../../../Components/User/Navbar/navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { updateData } from "../../../Redux/dataSlice";
+import Notification from "../../../Components/User/Notification/notification";
 
 export const CartPage = () => {
   const location = useLocation();
@@ -88,7 +89,7 @@ export const CartPage = () => {
       setSelectAll(false);
     } catch (error) {
       console.error("Error deleting item:", error);
-      alert(`Error deleting item: ${error.message}`);
+      Notification(`Error deleting item: ${error.message}`);
     }
   };
 
@@ -153,7 +154,7 @@ export const CartPage = () => {
     try {
         // Gửi yêu cầu POST tới API để thêm CartItem
         await createOrder(order);
-        alert("Đơn hàng được đặt thành công.")
+        Notification("Đơn hàng được đặt thành công.")
         selectedBookIds.map((item) => {
           //(order_id,book_id,quantity,price_per_item,total_price)
           const book = {
@@ -174,7 +175,7 @@ export const CartPage = () => {
         
         setPayment(false)
     } catch (error) {
-      alert(`Lỗi khi thêm vào giỏ hàng: ${error.message}`);
+      Notification(`Lỗi khi order in cart: ${error.message}`);
       console.error("Lỗi thêm vào giỏ hàng:", error);
     }
   };

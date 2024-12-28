@@ -31,7 +31,16 @@ export const updateBook = async (book_id,data) => {
     const response = await apiClient.put(`/books/${book_id}`,data);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Lỗi không xác định");
+    throw new Error(error.response?.data?.error || "Lỗi cập nhật sách");
+  }
+};
+
+export const addBook = async (data) => {
+  try {
+    const response = await apiClient.post(`/books`,data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || "Lỗi thêm sách");
   }
 };
 

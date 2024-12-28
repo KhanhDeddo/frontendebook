@@ -24,7 +24,7 @@ const Header = () => {
     if (storedUser) {
       setUser(JSON.parse(storedUser)); // Chuyển đổi chuỗi JSON thành đối tượng
     }
-  }, [location]);
+  }, [location,checkDataChange]);
 
   const [searchValue, setSearchValue] = useState("");
   const handleNavigation = (category) => {

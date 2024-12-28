@@ -110,7 +110,7 @@ const AdminUser = () => {
 		<div className=''>
 			<div className="home-title">Người dùng</div>
 			<div className='header-page'>
-				<button onClick={handleAdd}>Thêm mới</button>
+				{/* <button onClick={handleAdd}>Thêm mới</button> */}
 			</div>
 			<DataTable
 				key={keyTable}

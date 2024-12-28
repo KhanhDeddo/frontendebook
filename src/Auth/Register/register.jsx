@@ -5,6 +5,7 @@ import { createUser, fetchListUser} from "../../Api/apiManageUser";
 import { sendMail } from "../../Api/apiSendMail";
 import { ROUTER } from "../../Routers/router";
 import { createCart } from "../../Api/apiManageCart";
+import Notification from "../../Components/User/Notification/notification";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -204,11 +205,8 @@ const RegisterPage = () => {
               {isSubmitting ? "Đang gửi..." : "Đăng ký"}
             </button>
           </form>
-
-          {/* Thông báo lỗi hoặc thành công */}
-          {/* {error && <p className="error-message">{alert(error)}</p>} */}
-          {error && <p className="error-message">{alert("Đăng ký không thành công, vui lòng thử lại !")}</p>}
-          {success && <p className="success-message">{alert(success)}</p>}
+          {error && <p className="error-message">{Notification("Đăng ký không thành công, vui lòng thử lại !")}</p>}
+          {success && <p className="success-message">{Notification(success)}</p>}
 
           <p className="login-link">
             Bạn đã có tài khoản? <Link to="/dang-nhap">Đăng nhập</Link>

@@ -3,8 +3,9 @@ import './AdminProduct.scss';
 import DataTable from "react-data-table-component";
 // import { addProduct, getProducts, updateProduct} from '../../../../Api/apiAdmin';
 import { Space, Switch } from 'antd';
-import { updateBook } from '../../../Api/apiManageBook';
+import { addBook, updateBook } from '../../../Api/apiManageBook';
 import { fetchListBookAdmin } from '../../../Api/apiHomeAdmin';
+import Notification from '../../../Components/User/Notification/notification';
 
 const AdminProduct = () => {
     const [listData,setlistData] = useState([]);
@@ -16,6 +17,7 @@ const AdminProduct = () => {
 	const [currentFilter, setCurrentFilter] = useState(""); // Bộ lọc hiện tại
 	const [activeButton, setActiveButton] = useState(0); // Index của nút active
 	const [checkUpdate, setCheckUpdate] = useState(false);
+	const [statePopup, setstatePopup] = useState(1);//Trạng thái updatebookbook hay addbook
 	const loadDataGrid = useCallback(
         async (value) => {
             try {
@@ -55,10 +57,6 @@ const AdminProduct = () => {
 	
 		setListSearchProduct(filteredData); // Cập nhật danh sách hiển thị
 	};
-	
-	const [statePopup, setstatePopup] = useState(1);
-	const STATE_ADD = 2;
-
 	const updateStatus = async(id,status) =>{
 		try{
 			const data = {status_book : status}
@@ -69,12 +67,6 @@ const AdminProduct = () => {
 	useEffect(()=>{
 		loadDataGrid(search);
     }, [loadDataGrid, search, checkUpdate])
-
-	const handleEdit = (row) => {
-		setrowSelected(row);  // Lưu thông tin hàng được chọn
-		setshowPopup(true);   // Hiển thị popup
-		setstatePopup(1);     // Đặt trạng thái thành "Sửa"
-	};
 	
 	const columns = [
 		{
@@ -110,12 +102,6 @@ const AdminProduct = () => {
 			center: true,
 			reorder: true,
 		},		  
-		// {
-		// 	id: 4,
-		// 	name: "Ngày tạo",
-		// 	selector: (row) => new Date(row.created_at).toLocaleString(),
-		// 	reorder: true
-		// },
 		{
 			id: 5,
 			name: "Giá tiền",
@@ -156,13 +142,13 @@ const AdminProduct = () => {
 
 	const list_detail = [
 		{ name: "Tiêu đề", property: "title", type: "text" },
-		// { name: "Trạng thái", property: "status_book", type: "text",readOnly:true, },
 		{ name: "Tác giả", property: "author", type: "text" },
+		{ name: "Trạng thái", property: "status_book", type: "text" },
 		{ name: "Mô tả", property: "description", type: "text" },
 		{ name: "Giá tiền", property: "price", type: "number" },
 		{ name: "Link ảnh", property: "image_url", type: "text" },
 		{ name: "Thể loại", property: "category", type: "text" },
-		{ name: "Lớp", property: "level_class", type: "text" },
+		{ name: "Lớp", property: "level_class", type: "number" },
 		{ name: "Level trường", property: "level_school", type: "text" },
 		{ name: "Số lượng sách", property: "stock_quantity", type: "number" },
 		{ name: "Người phát hành", property: "publisher", type: "text" },
@@ -211,25 +197,33 @@ const AdminProduct = () => {
         }
     };
 
-	const hanldeConfirm = async () => {
-		if (statePopup === STATE_ADD) {
-			var res = await updateBook(rowSelected);
-		}else {
-			res = await updateBook(rowSelected);
-		}
-		if (res) {
-			setshowPopup(false);
-			alert('Lưu thành công');
-		}else {
-			alert('Có lỗi xảy ra');
-		}
-		
-	}
-
 	const handleAdd = () => {
 		setrowSelected({});
 		setstatePopup(2);
 		setshowPopup(true)
+	}
+	const handleEdit = (row) => {
+		setrowSelected(row);  // Lưu thông tin hàng được chọn
+		setshowPopup(true);   // Hiển thị popup
+		setstatePopup(1);     // Đặt trạng thái thành "Sửa"
+	};
+
+	const hanldeConfirm = async () => {
+		try{
+			console.log(rowSelected)
+			const { updated_at, ...bookUpdate } = rowSelected;
+			if(statePopup === 1){
+				await updateBook(bookUpdate.id,bookUpdate)
+				Notification(`Cập nhật ${bookUpdate.title} thành công !`)
+			}else{
+				await addBook(bookUpdate)
+				Notification(`Thêm sách ${bookUpdate.title} thành công !`)
+			}
+			setshowPopup(false)
+			setCheckUpdate(!checkUpdate)
+		}catch(err){
+			Notification(`${err}`)
+		}
 	}
 
 	const handleChange = (event, property) => {
@@ -302,7 +296,10 @@ const AdminProduct = () => {
 							) : (
 							<input
 								type={item.type}
+								placeholder={item.name==="Giá tiền"&&"Đơn vị: Nghìn VND"}
+								min={item.type==="number"&&0}
 								className='value'
+
 								value={rowSelected[item.property] || ""}
 								onChange={(e) => handleChange(e, item.property)}
 							/>

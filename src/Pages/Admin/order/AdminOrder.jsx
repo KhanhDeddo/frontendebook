@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import "./AdminOrder.scss";
 import DataTable from "react-data-table-component";
 import { fetchListOrderAdmin } from "../../../Api/apiHomeAdmin";
@@ -14,44 +14,44 @@ const AdminOrder = () => {
     const [orderDetail, setOrderDetail] = useState([]); // Chi tiết đơn hàng
     const [currentFilter, setCurrentFilter] = useState(""); // Bộ lọc hiện tại
     const [activeButton, setActiveButton] = useState(0); // Index của nút active
-    const [bookUpdate,setBookUpdate] = useState([])
+    // const [bookUpdate,setBookUpdate] = useState([])
     const [listBook,setListBook] = useState([])
 
     const CONFIRM_STATUS = ["Chờ xác nhận", "Đã xác nhận", "Chờ vận chuyển", "Đang giao", "Hoàn thành"];
-
-    // Hàm tải dữ liệu từ API
-    const loadDataGrid = async () => {
+    const loadDataGrid = useCallback(async () => {
         try {
-            const datalistbook = await fetchListBook();
-            setListBook(datalistbook)
-            const data = await fetchListOrderAdmin({ search: "" });
-            const safeData = Array.isArray(data) ? data : [];
-            
-            // Sắp xếp danh sách theo ngày mới nhất
-            const sortedData = safeData.sort(
-                (a, b) => new Date(b.created_at) - new Date(a.created_at)
-            );
-            
-            setListData(sortedData);
-    
-            // Áp dụng bộ lọc hiện tại
-            setListSearchOrder(
-                currentFilter === "" 
-                    ? sortedData 
-                    : sortedData.filter((order) => order.status === currentFilter)
-            );
+            // Lấy danh sách sách và danh sách đơn hàng
+            const [books, orders] = await Promise.all([fetchListBook(), fetchListOrderAdmin({ search: "" })]);
+
+            // Sắp xếp danh sách đơn hàng theo ngày tạo mới nhất
+            const sortedOrders = Array.isArray(orders)
+                ? orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                : [];
+
+            // Áp dụng bộ lọc
+            const filteredOrders = currentFilter
+                ? sortedOrders.filter((order) => order.status === currentFilter)
+                : sortedOrders;
+
+            // Cập nhật trạng thái
+            setListBook(books);
+            setListData(sortedOrders);
+            setListSearchOrder(filteredOrders);
         } catch (err) {
             console.error("Lỗi khi tải dữ liệu:", err);
+
+            // Xử lý lỗi và thiết lập trạng thái mặc định
+            setListBook([]);
             setListData([]);
             setListSearchOrder([]);
         }
-    };
-    
+    }, [currentFilter]); // Phụ thuộc vào currentFilter
 
-    // Load dữ liệu khi component được mount
     useEffect(() => {
         loadDataGrid();
-    }, []);
+    }, [loadDataGrid]); // Thêm loadDataGrid vào dependency array
+
+    
 
     // Hàm thay đổi bộ lọc
     const handleChangeFilter = (status,index) => {
@@ -69,11 +69,11 @@ const AdminOrder = () => {
             const updatedRow = { ...row, status: CONFIRM_STATUS[currentIndex + 1] };
             try {
                 if(updatedRow.status === "Đã xác nhận"){
-                    orderDetail.map((item,key)=>{
-                        const book = listBook.filter((book)=> book.id === item.book_id)
-                        // setBookUpdate(book);
-                        console.log(bookUpdate)
-                    })
+                    // orderDetail.map((item,key)=>{
+                    //     const book = listBook.filter((book)=> book.id === item.book_id)
+                    //     // setBookUpdate(book);
+                    //     console.log(bookUpdate)
+                    // })
                 }
                 updatedRow.status === "Hoàn thành" ?
                     await updateOrder(updatedRow.order_id, { status: updatedRow.status,payment_status:"Đã thanh toán" })

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import './admin.scss';
 import { IoMdCart } from 'react-icons/io';
-import { fetcListOrder } from '../../Api/apiManageOrder';
-import { getDashboard, getOrderRecent} from '../../Api/apiHomeAdmin';
-import { fetchListUser } from '../../Api/apiManageUser';
+import { fetcListOrder } from '../../../Api/apiManageOrder';
+import { getDashboard, getOrderRecent} from '../../../Api/apiHomeAdmin';
+import { fetchListUser } from '../../../Api/apiManageUser';
 
 export const AdminHome = () => {
 	const [dashboard, setDashboard] = useState(null);

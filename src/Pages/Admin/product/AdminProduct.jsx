@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './AdminProduct.scss';
 import DataTable from "react-data-table-component";
 // import { addProduct, getProducts, updateProduct} from '../../../../Api/apiAdmin';
@@ -10,36 +10,40 @@ const AdminProduct = () => {
     const [listData,setlistData] = useState([]);
     const [listSearchProduct,setListSearchProduct] = useState([]);
 	const [search] = useState('');
-	const [keyTable, setkeyTable] = useState(1);
+	const [keyTable] = useState(1);
 	const [rowSelected, setrowSelected] = useState({});
 	const [showPopup, setshowPopup] = useState(false);
 	const [currentFilter, setCurrentFilter] = useState(""); // Bộ lọc hiện tại
 	const [activeButton, setActiveButton] = useState(0); // Index của nút active
 	const [checkUpdate, setCheckUpdate] = useState(false);
-	const loadDataGrid = async (value) => {
-		try {
-			const data = await fetchListBookAdmin({ search: value });
-			const safeData = Array.isArray(data) ? data : [];
-	
-			// Sắp xếp danh sách theo ngày mới nhất
-			const sortedData = safeData.sort(
-				(a, b) => new Date(b.created_at) - new Date(a.created_at)
-			);
-	
-			setlistData(sortedData); // Cập nhật danh sách gốc
-	
-			// Áp dụng bộ lọc hiện tại
-			const filteredData = currentFilter === ""
-				? sortedData
-				: sortedData.filter((item) => item.status_book === currentFilter);
-	
-			setListSearchProduct(filteredData);
-		} catch (err) {
-			console.error("Lỗi khi tải dữ liệu:", err);
-			setlistData([]);
-			setListSearchProduct([]);
-		}
-	};
+	const loadDataGrid = useCallback(
+        async (value) => {
+            try {
+                const data = await fetchListBookAdmin({ search: value });
+                const safeData = Array.isArray(data) ? data : [];
+    
+                // Sắp xếp danh sách theo ngày mới nhất
+                const sortedData = safeData.sort(
+                    (a, b) => new Date(b.created_at) - new Date(a.created_at)
+                );
+    
+                setlistData(sortedData); // Cập nhật danh sách gốc
+    
+                // Áp dụng bộ lọc hiện tại
+                const filteredData =
+                    currentFilter === ""
+                        ? sortedData
+                        : sortedData.filter((item) => item.status_book === currentFilter);
+    
+                setListSearchProduct(filteredData);
+            } catch (err) {
+                console.error("Lỗi khi tải dữ liệu:", err);
+                setlistData([]);
+                setListSearchProduct([]);
+            }
+        },
+        [currentFilter] // Chỉ phụ thuộc vào currentFilter
+    );
 	
 	const handleChangeFilter = (status, index) => {
 		setCurrentFilter(status); // Cập nhật bộ lọc hiện tại
@@ -64,7 +68,7 @@ const AdminProduct = () => {
 	}
 	useEffect(()=>{
 		loadDataGrid(search);
-    }, [checkUpdate])
+    }, [loadDataGrid, search, checkUpdate])
 
 	const handleEdit = (row) => {
 		setrowSelected(row);  // Lưu thông tin hàng được chọn

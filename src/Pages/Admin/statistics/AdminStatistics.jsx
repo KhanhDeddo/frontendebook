@@ -95,7 +95,7 @@ const AdminStatistics = () => {
       setDataDay(dailyData);
     };
     filterOrdersByDay();
-  }, [dataMonth]);
+  }, [dataMonth,selectedMonth,selectedYear]);
 
   const [dataQuarter, setDataQuarter] = useState([]);
   useEffect(() => {

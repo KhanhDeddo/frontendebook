@@ -1,3 +1,4 @@
+npm install @reduxjs/toolkit react-redux
 npm install react-scripts
 npm install react-router-dom
 npm install sass

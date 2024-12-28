@@ -81,19 +81,21 @@ const Header = () => {
   const [listCartItem, setListCartItem] = useState([]);
   const [error, setError] = useState(null);
 
-  const loadListCartItem = async () => {
-    if (user) {
-      try {
-        const data = await fetchListCartItemByUser(user.user_id);
+  const loadListCartItem = async (userId) => {
+    try {
+        const data = await fetchListCartItemByUser(userId);
         setListCartItem(data);
-      } catch (err) {
+    } catch (err) {
         setError(err.message);
-      }
     }
-  };
-  useEffect(() => {
-    loadListCartItem();
-},[user]);
+};
+
+useEffect(() => {
+    if (user) {
+        loadListCartItem(user.user_id);
+    }
+}, [user]);
+
   const total = listCartItem.reduce(
     (sum, item) => sum + Number(item.price_at_purchase),
     0

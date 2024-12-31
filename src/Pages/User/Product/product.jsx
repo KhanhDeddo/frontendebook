@@ -140,6 +140,17 @@ const BookDetails = ({ onCartUpdated }) => {
           }
         }
         const req = await createOrder(order);
+        const getOrderUser = await fetchListOrderByUser(user.user_id);
+        const getOrderId = getOrderUser.find((item) => item.payment_id_zalopay === order.payment_id_zalopay);
+        const bookorder = {
+          order_id: getOrderId.order_id,
+          book_id: book.id,
+          quantity: quantity,
+          price_per_item: totalPrice/quantity,
+          total_price: totalPrice,
+          };
+        createOrderItem(bookorder);
+        console.log(bookorder) 
         if (order.payment_method === "Thanh toán bằng ZaloPay") {
           const datapayment = {
             app_user: user.user_name,
@@ -158,18 +169,7 @@ const BookDetails = ({ onCartUpdated }) => {
         Notification("Đơn hàng được đặt thành công.");
         setPayment(false);
         console.log(req);
-        console.log(order);
-        const getOrderUser = await fetchListOrderByUser(user.user_id);
-        const getOrderId = getOrderUser.find((item) => item.payment_id_zalopay === order.payment_id_zalopay);
-        const bookorder = {
-          order_id: getOrderId.order_id,
-          book_id: book.id,
-          quantity: quantity,
-          price_per_item: totalPrice/quantity,
-          total_price: totalPrice,
-          };
-        createOrderItem(bookorder);
-        console.log(bookorder)          
+        console.log(order);         
     } catch (error) {
       Nortification(`Lỗi khi order in product: ${error.message}`);
       console.error("Lỗi khi order in product:", error);

@@ -150,26 +150,6 @@ export const CartPage = () => {
         }
       }
       const req = await createOrder(order);
-      if (order.payment_method === "Thanh toán bằng ZaloPay") {
-        const datapayment = {
-          app_user: user.user_name,
-          app_trans_id: order.payment_id_zalopay,
-          amount: order.total_price,
-          description: "Thanh toán đơn hàng",
-        };
-        const res = await pyamentByZaloPay(datapayment);
-        console.log(res);
-        if (res.return_message === "Giao dịch thành công") {
-          window.location.href = res.order_url;
-        } else {
-          setError("Thanh toán thất bại! Vui lòng thử lại.");
-        }
-      }
-      Notification("Đơn hàng được đặt thành công.");
-      setPayment(false);
-      console.log(req);
-      console.log(order);
-
       const getOrderUser = await fetchListOrderByUser(user.user_id);
       const getOrderId = getOrderUser.find(
         (item) => item.payment_id_zalopay === order.payment_id_zalopay
@@ -189,6 +169,25 @@ export const CartPage = () => {
           console.error(`Failed to process book ${item.book_id}:`, error);
         }
       }
+      if (order.payment_method === "Thanh toán bằng ZaloPay") {
+        const datapayment = {
+          app_user: user.user_name,
+          app_trans_id: order.payment_id_zalopay,
+          amount: order.total_price,
+          description: "Thanh toán đơn hàng",
+        };
+        const res = await pyamentByZaloPay(datapayment);
+        console.log(res);
+        if (res.return_message === "Giao dịch thành công") {
+          window.location.href = res.order_url;
+        } else {
+          setError("Thanh toán thất bại! Vui lòng thử lại.");
+        }
+      }
+      Notification("Đơn hàng được đặt thành công.");
+      setPayment(false);
+      console.log(req);
+      console.log(order);
     } catch (error) {
       Notification(`Lỗi khi đặt hàng: ${error.message}`);
       console.error("Lỗi khi đặt hàng:", error);

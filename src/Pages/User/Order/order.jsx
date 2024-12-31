@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./order.scss";
 import DataTable from "react-data-table-component";
-import { fetchListOrderByUser, updateOrder } from "../../../Api/apiManageOrder";
+import { fetchListOrderByUser, fetchListOrderItemByOrderId, updateOrder } from "../../../Api/apiManageOrder";
 import NavBar from "../../../Components/User/Navbar/navbar";
+import { fetchListBook } from "../../../Api/apiManageBook";
 
 const Orders = () => {
     const [user, setUser] = useState(null);
@@ -11,6 +12,10 @@ const Orders = () => {
     const [filterStatus, setFilterStatus] = useState("");
     const [keyTable, setKeyTable] = useState(1);
     const [statusOrder, setStatusOrder] = useState(true);
+    const [rowSelected, setRowSelected] = useState({});
+    const [showPopup, setShowPopup] = useState(false);
+    const [orderDetail, setOrderDetail] = useState([]);
+    const [listBook,setListBook] = useState([])
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -24,7 +29,9 @@ const Orders = () => {
             const loadDataOrders = async () => {
                 try {
                     const data = await fetchListOrderByUser(user.user_id);
+                    const datalistbook = await fetchListBook();
                     setListOrder(data);
+                    setListBook(datalistbook);
                 } catch (err) {
                     console.error(err);
                 }
@@ -158,6 +165,26 @@ const Orders = () => {
         selectAllRowsItemText: "Tất cả",
     };
 
+
+   // Lấy chi tiết đơn hàng
+       const getDetailOrder = async (orderId) => {
+           try {
+               const data = await fetchListOrderItemByOrderId(orderId);
+               setOrderDetail(data);
+           } catch (err) {
+               console.error("Lỗi khi tải chi tiết đơn hàng:", err);
+           }
+       }; 
+    // Hàm chọn dòng trong bảng
+    const handleSelected = async (row) => {
+        setRowSelected(row);
+        await getDetailOrder(row.order_id);
+        setShowPopup(true);
+    };
+    const namebook = (item) => {
+        const book = listBook.filter((book)=> (book.id === item.book_id))
+        return book[0].title;
+    }
     return (
         <div className="container">
             <NavBar name="Đơn hàng" />
@@ -194,10 +221,58 @@ const Orders = () => {
                                 paginationComponentOptions={paginationComponentOptions}
                                 defaultSortFieldId={2}
                                 defaultSortAsc={false} // Sắp xếp giảm dần
+                                onRowDoubleClicked={handleSelected}
                             />
                         </div>
                     </div>
+                    <div>
+                        {showPopup && (
+                            <div className='popup'>
+                                <div className="popup-content">
+                                    <div className='header-popup flex-center'>
+                                        <div>Chi tiết đơn hàng</div>
+                                        <div onClick={() => setShowPopup(false)}>X</div>
+                                    </div>
+                                    <div className='body-popup'>
+                                        <div className='item'> Người mua: {rowSelected.user_name}</div>
+                                        <div className='item'> Ngày mua: {new Date(rowSelected.created_at).toLocaleString()}</div>
+                                        <div className='item'> Người nhận: {rowSelected.recipient_name}</div>
+                                        <div className='item'> Số điện thoại nhận: {rowSelected.recipient_phone}</div>
+                                        <div className='item'> Phương thức thanh toán: {rowSelected.payment_method}</div>
+                                        <div className='item'> Trạng thái thanh toán: {rowSelected.payment_status}</div>
+                                        <div className='item'> Địa chỉ nhận: {rowSelected.shipping_address}</div>
+                                        <div className='item'> Ngày nhận: 
+                                            {rowSelected.status === "Hoàn thành" && new Date(rowSelected.updated_at).toLocaleString()}</div>
+                                        <div className='item'>
+                                            <b>Danh sách đơn:</b>
+                                            <div className='flex'>
+                                                <div className='col-detail'>Tên sách</div>
+                                                <div className='col-detail'>Số lượng</div>
+                                                <div className='col-detail'>Giá tiền</div>
+                                                <div className='col-detail'>Tổng tiền</div>
+                                            </div>
+                                            {Array.isArray(orderDetail) && orderDetail.length > 0 ? (
+                                                orderDetail.map((item, index) => (
+                                                    <div className='flex' key={index}>
+                                                        <div className='col-detail'>{namebook(item)}</div>
+                                                        <div className='col-detail'>{item.quantity}</div>
+                                                        <div className='col-detail'>{Number(item.price_per_item)}.000 đ</div>
+                                                        <div className='col-detail'>{Number(item.total_price)}.000 đ</div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div>Không có dữ liệu chi tiết đơn hàng.</div>
+                                            )}
+                                        </div>
+                                        <div className='item'> Tổng tiền: {rowSelected.total_price}.000 đ</div>
+                                        <div className='item'> Trạng thái: {rowSelected.status}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
+                
             ) : (
                 <div>Vui lòng đăng nhập để thực hiện chức năng này....</div>
             )}

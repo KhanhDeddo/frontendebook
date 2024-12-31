@@ -271,6 +271,8 @@ const AdminOrder = () => {
                             <div className='item'> Ngày mua: {new Date(rowSelected.created_at).toLocaleString()}</div>
                             <div className='item'> Người nhận: {rowSelected.recipient_name}</div>
                             <div className='item'> Số điện thoại nhận: {rowSelected.recipient_phone}</div>
+                            <div className='item'> Phương thức thanh toán: {rowSelected.payment_method}</div>
+                            <div className='item'> Trạng thái thanh toán: {rowSelected.payment_status}</div>
                             <div className='item'> Địa chỉ nhận: {rowSelected.shipping_address}</div>
                             <div className='item'> Ngày nhận: 
                                 {rowSelected.status === "Hoàn thành" && new Date(rowSelected.updated_at).toLocaleString()}</div>

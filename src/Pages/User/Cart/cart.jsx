@@ -3,11 +3,13 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { fetchListBook } from "../../../Api/apiManageBook";
 import { fetchListCart, fetchListCartItemByUser, updateCartItem } from "../../../Api/apiManageCart";
-import { createOrder, createOrderItem, fetcListOrder } from "../../../Api/apiManageOrder";
+import { createOrder, createOrderItem, fetchListOrderByUser} from "../../../Api/apiManageOrder";
 import NavBar from "../../../Components/User/Navbar/navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { updateData } from "../../../Redux/dataSlice";
 import Notification from "../../../Components/User/Notification/notification";
+import { randomOrderIdZalopay } from "../../../Action/randomOrderId";
+import { pyamentByZaloPay } from "../../../Api/apiPaymentByZaloPay";
 
 export const CartPage = () => {
   const location = useLocation();
@@ -19,7 +21,6 @@ export const CartPage = () => {
   const [listBook, setListBook] = useState([]); // State cho các book_id được chọn
   const [payment,setPayment] = useState(false);
   const [changeQuantityCartItem,setChangeQuantityCartItem] = useState(false);
-  const [listOrder,setListOrder] = useState([]);
   const [listCart,setListCart] = useState([]);
   const checkDataChange = useSelector((state) => state.data.value); // Lấy state
   const dispatch = useDispatch(); //hàm cập nhật dư liệu :v
@@ -115,24 +116,12 @@ export const CartPage = () => {
         : [...prevSelected, book_id]
     );
   };
-  useEffect(() => {
-    if (user) {
-        const loadDataOrders = async () => {
-            try {
-                const data = await fetcListOrder();
-                setListOrder(data);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-        loadDataOrders();
-    }
-}, [user,payment]);
   const [order, setOrder] = useState({});
   useEffect(() => {
     if (user) {
       setOrder({
         user_id : user.user_id,
+        payment_id_zalopay: randomOrderIdZalopay(),
         recipient_name: user.user_name || "",
         recipient_email: user.user_email || "",
         recipient_phone: user.user_phone || "",
@@ -152,33 +141,59 @@ export const CartPage = () => {
   };
   const handConfirm = async () => {
     try {
-        // Gửi yêu cầu POST tới API để thêm CartItem
-        await createOrder(order);
-        Notification("Đơn hàng được đặt thành công.")
-        selectedBookIds.map((item) => {
-          //(order_id,book_id,quantity,price_per_item,total_price)
-          const book = {
-            order_id: listOrder.length+1,
-            book_id: item.book_id,
-            quantity: item.quantity,
-            price_per_item: item.price_at_purchase/item.quantity,
-            total_price: item.price_at_purchase,
-            };
-          console.log(book)          
-          createOrderItem(book);
-          return(<></>)
-        })
-        selectedBookIds.map((item) => {
-          deleteCartItem(item.cart_id,item.book_id)
-          return(<></>)
-        })
-        
-        setPayment(false)
+      const requiredFields = ["recipient_name", "recipient_email", "recipient_phone", "shipping_address", "payment_method"];
+        // Kiểm tra từng trường yêu cầu
+      for (let field of requiredFields) {
+        if (!order[field] || order[field].trim() === "") {
+          Notification(`Vui lòng nhập đầy đủ thông tin: ${field.replace(/_/g, " ")}!`);
+          return; // Ngừng thực hiện nếu phát hiện trường còn thiếu
+        }
+      }
+      const req = await createOrder(order);
+      if (order.payment_method === "Thanh toán bằng ZaloPay") {
+        const datapayment = {
+          app_user: user.user_name,
+          app_trans_id: order.payment_id_zalopay,
+          amount: order.total_price,
+          description: "Thanh toán đơn hàng",
+        };
+        const res = await pyamentByZaloPay(datapayment);
+        console.log(res);
+        if (res.return_message === "Giao dịch thành công") {
+          window.location.href = res.order_url;
+        } else {
+          setError("Thanh toán thất bại! Vui lòng thử lại.");
+        }
+      }
+      Notification("Đơn hàng được đặt thành công.");
+      setPayment(false);
+      console.log(req);
+      console.log(order);
+
+      const getOrderUser = await fetchListOrderByUser(user.user_id);
+      const getOrderId = getOrderUser.find(
+        (item) => item.payment_id_zalopay === order.payment_id_zalopay
+      );
+      for (const item of selectedBookIds) {
+        const book = {
+          order_id: getOrderId.order_id,
+          book_id: item.book_id,
+          quantity: item.quantity,
+          price_per_item: item.price_at_purchase / item.quantity,
+          total_price: item.price_at_purchase,
+        };
+        try {
+          await createOrderItem(book);
+          await deleteCartItem(item.cart_id, item.book_id);
+        } catch (error) {
+          console.error(`Failed to process book ${item.book_id}:`, error);
+        }
+      }
     } catch (error) {
-      Notification(`Lỗi khi order in cart: ${error.message}`);
-      console.error("Lỗi thêm vào giỏ hàng:", error);
+      Notification(`Lỗi khi đặt hàng: ${error.message}`);
+      console.error("Lỗi khi đặt hàng:", error);
     }
-  };
+  };  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setOrder((prev) => ({ ...prev, [name]: value }));
@@ -191,7 +206,7 @@ export const CartPage = () => {
     // Kiểm tra từng trường yêu cầu
     for (let field of requiredFields) {
       if (!order[field] || order[field].trim() === "") {
-        alert(`Vui lòng nhập đầy đủ thông tin: ${field.replace(/_/g, " ")}!`);
+        Notification(`Vui lòng nhập đầy đủ thông tin: ${field.replace(/_/g, " ")}!`);
         return; // Ngừng thực hiện nếu phát hiện trường còn thiếu
       }
     }
@@ -428,7 +443,17 @@ export const CartPage = () => {
                                     <label>
                                       Phương thức thanh toán:
                                       <div className="methods-payment">
-                                        <div></div>
+                                        <div>
+                                        <input
+                                            type="radio"
+                                            name="payment_method"
+                                            value={"Thanh toán bằng ZaloPay"}
+                                            onChange={handleInputChange}
+                                            checked = {order.payment_method === "Thanh toán bằng ZaloPay"}
+                                            required
+                                          />
+                                          <label>Thanh toán bằng ZaloPay</label>
+                                        </div>
                                         <div>
                                           <input
                                             type="radio"

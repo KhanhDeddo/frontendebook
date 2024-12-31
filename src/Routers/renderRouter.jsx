@@ -9,7 +9,6 @@ import { Shop } from "../Pages/User/Shop/shop";
 import BookDetails from "../Pages/User/Product/product";
 import { CartPage } from "../Pages/User/Cart/cart";
 import Orders from "../Pages/User/Order/order";
-import Payment from "../Components/User/Payment/payment";
 import AdminProduct from "../Pages/Admin/product/AdminProduct";
 import AdminStatistics from "../Pages/Admin/statistics/AdminStatistics";
 import AdminLayout from "../Components/Admin/layout/AdminLayout";
@@ -17,6 +16,7 @@ import AdminUser from "../Pages/Admin/user/AdminUser";
 import AdminOrder from "../Pages/Admin/order/AdminOrder";
 import { AdminHome } from "../Pages/Admin/Home/admin";
 import NotFound from "../Components/NotFound";
+import Payment from "../Components/User/Payment/payment";
 
 
 const RenderRouter = () => {

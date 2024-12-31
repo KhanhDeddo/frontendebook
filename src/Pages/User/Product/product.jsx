@@ -6,10 +6,13 @@ import { fetchBookById, fetchListBook } from "../../../Api/apiManageBook";
 import {createCartItem, fetchCartItemByCartIdAndBookId, fetchListCart, updateCartItem } from "../../../Api/apiManageCart";
 import NavBar from "../../../Components/User/Navbar/navbar";
 import { CardBook } from "../../../Components/User/Card/card";
-import { createOrder, createOrderItem, fetcListOrder } from "../../../Api/apiManageOrder";
+import { createOrder, createOrderItem, fetchListOrderByUser} from "../../../Api/apiManageOrder";
 import { useDispatch, useSelector} from "react-redux";
 import { updateData } from "../../../Redux/dataSlice";
 import Nortification from "../../../Components/User/Notification/notification";
+import { pyamentByZaloPay } from "../../../Api/apiPaymentByZaloPay";
+import Notification from "../../../Components/User/Notification/notification";
+import { randomOrderIdZalopay } from "../../../Action/randomOrderId";
 
 
 const BookDetails = ({ onCartUpdated }) => {
@@ -108,13 +111,14 @@ const BookDetails = ({ onCartUpdated }) => {
   };
 
   // Tính tổng tiền
-  const totalPrice = (parseFloat(book?.price || 0) * quantity).toFixed(2);
+  const totalPrice = (Number(book?.price || 0) * quantity)
 
   const [order, setOrder] = useState({});
   useEffect(() => {
     if (user) {
       setOrder({
         user_id : user.user_id,
+        payment_id_zalopay: randomOrderIdZalopay(),
         recipient_name: user.user_name || "",
         recipient_email: user.user_email || "",
         recipient_phone: user.user_phone || "",
@@ -125,50 +129,50 @@ const BookDetails = ({ onCartUpdated }) => {
     }
   }, [user,totalPrice]);
 
-
-  const [listOrder,setListOrder] = useState([]);
-  useEffect(() => {
-      if (user) {
-          const loadDataOrders = async () => {
-              try {
-                  const data = await fetcListOrder();
-                  setListOrder(data);
-              } catch (err) {
-                  console.error(err);
-              }
-          };
-          loadDataOrders();
-      }
-  }, [user,payment]);
-
   const handConfirm = async () => {
     try {
         const requiredFields = ["recipient_name", "recipient_email", "recipient_phone", "shipping_address", "payment_method"];
         // Kiểm tra từng trường yêu cầu
         for (let field of requiredFields) {
           if (!order[field] || order[field].trim() === "") {
-            Nortification(`Vui lòng nhập đầy đủ thông tin: ${field.replace(/_/g, " ")}!`);
+            Notification(`Vui lòng nhập đầy đủ thông tin: ${field.replace(/_/g, " ")}!`);
             return; // Ngừng thực hiện nếu phát hiện trường còn thiếu
           }
         }
-        await createOrder(order);
-        console.log(listOrder.length+1)
-        Nortification("Đơn hàng được đặt thành công.")
-       
-          //(order_id,book_id,quantity,price_per_item,total_price)
+        const req = await createOrder(order);
+        if (order.payment_method === "Thanh toán bằng ZaloPay") {
+          const datapayment = {
+            app_user: user.user_name,
+            app_trans_id: order.payment_id_zalopay,
+            amount: order.total_price,
+            description: "Thanh toán đơn hàng",
+          };
+          const res = await pyamentByZaloPay(datapayment);
+          console.log(res);
+          if (res.return_message === "Giao dịch thành công") {
+            window.location.href = res.order_url;
+          } else {
+            Notification("Thanh toán thất bại! Vui lòng thử lại.");
+          }
+        }
+        Notification("Đơn hàng được đặt thành công.");
+        setPayment(false);
+        console.log(req);
+        console.log(order);
+        const getOrderUser = await fetchListOrderByUser(user.user_id);
+        const getOrderId = getOrderUser.find((item) => item.payment_id_zalopay === order.payment_id_zalopay);
         const bookorder = {
-          order_id: listOrder.length+1,
+          order_id: getOrderId.order_id,
           book_id: book.id,
           quantity: quantity,
           price_per_item: totalPrice/quantity,
           total_price: totalPrice,
           };
-        console.log(bookorder)          
         createOrderItem(bookorder);
-        setPayment(false)
+        console.log(bookorder)          
     } catch (error) {
-      Nortification(`Lỗi khi thêm vào giỏ hàng: ${error.message}`);
-      console.error("Lỗi thêm vào giỏ hàng:", error);
+      Nortification(`Lỗi khi order in product: ${error.message}`);
+      console.error("Lỗi khi order in product:", error);
     }
   };
   const handleInputChange = (e) => {
@@ -311,7 +315,7 @@ const BookDetails = ({ onCartUpdated }) => {
             </div>
             <div>
               <span>Tổng tiền: </span>
-              <span className="total-price">{totalPrice}0 VND</span>
+              <span className="total-price">{totalPrice}.000 VND</span>
             </div>
             <div className="actions">
               <button className="add-to-cart" onClick={handleAddCartAction}>
@@ -428,7 +432,17 @@ const BookDetails = ({ onCartUpdated }) => {
                                     <label>
                                       Phương thức thanh toán:
                                       <div className="methods-payment">
-                                        <div></div>
+                                        <div>
+                                          <input
+                                              type="radio"
+                                              name="payment_method"
+                                              value={"Thanh toán bằng ZaloPay"}
+                                              onChange={handleInputChange}
+                                              checked = {order.payment_method === "Thanh toán bằng ZaloPay"}
+                                              required
+                                            />
+                                            <label>Thanh toán bằng ZaloPay</label>
+                                        </div>
                                         <div>
                                           <input
                                             type="radio"
